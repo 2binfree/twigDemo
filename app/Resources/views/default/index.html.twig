@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% set filters = [
+        {'value': date(), 'filter': 'date', 'arg': ["d/m/Y"]},
+        {'value': 'une chaine de caractères', 'filter': 'length'},
+        {'value': 'une chaine de caractères', 'filter': 'capitalize'},
+        {'value': '<p>une chaine de caractères</p>', 'filter': 'escape'},
+        {'value': '12345', 'filter': 'first'},
+        {'value': 'une chaine de %s caractères', 'filter': 'format', 'arg': ['petits']},
+        {'value': ['A', 'B', 'C'], 'filter': 'join', 'arg': ['|']},
+        {'value': ['A', 'B', 'C'], 'filter': 'json_encode'},
+        {'value': ['A', 'B', 'C'], 'filter': 'last'},
+        {'value': 'WILD CODE SCHOOL', 'filter': 'lower'},
+        {'value': 'wild code school', 'filter': 'upper'},
+        {'value': 'wild code school', 'filter': 'title'},
+        {'value': ['A', 'B', 'C'], 'filter': 'merge', 'arg': [['D', 'E']]},
+        {'value': ['A', 'B', 'C'], 'filter': 'batch', 'arg': [2, 'empty']},
+        {'value': 'une chaine de \n caractères', 'filter': 'nl2br'},
+        {'value': 'une chaine de caractères', 'filter': 'replace', 'arg': [{'une': 'des', 'chaine': 'chaines'}]},
+        {'value': '12345', 'filter': 'reverse'},
+        {'value': 1.543, 'filter': 'round'},
+        {'value': -1.543, 'filter': 'abs'},
+        {'value': 'une chaine de caractères', 'filter': 'slice', 'arg': [0, 3]},
+        {'value': ['G', 'E', 'A'], 'filter': 'sort'},
+        {'value': '123456', 'filter': 'split', 'arg': [""]},
+        {'value': '123456', 'filter': 'split', 'arg': ["", 2]},
+        {'value': '<p>une chaine de <br>caractères</p>', 'filter': 'striptags', 'arg': ['<p>']},
+        {'value': '  nettoyage ', 'filter': 'trim'},
+        {'value': '  nettoyage ', 'filter': 'trim', 'arg': [' ', 'left']},
+        {'value': 'nettoyage.', 'filter': 'trim', 'arg': ['.', 'right']},
+        {'value': 'url au mauvais format', 'filter': 'url_encode'},
+        {'value': {'name': 'john', 'age': 18}, 'filter': 'url_encode'},
+    ]
+    %}
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-4"><h3>Valeur</h3></div>
+            <div class="col-xs-4"><h3>Filtre</h3></div>
+            <div class="col-xs-4"><h3>Resultat</h3></div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12"><hr></div>
+        </div>
+        {% for filter in filters %}
+        <div class="row">
+            <div class="col-xs-4">{{ dump(filter.value) }}</div>
+            <div class="col-xs-4">
+                {{ filter.filter }}
+                {% if filter.arg is defined %}
+                    ('
+                    {% if filter.arg.0 is iterable %}
+                        {{ filter.arg.0 | json_encode }}
+                    {% else %}
+                        {{ filter.arg | join(',') }}
+                    {% endif %}
+                    ')
+                {% endif %}
+            </div>
+            <div class="col-xs-4">{{ dump(filter.value | allInOne(filter.filter, filter.arg | default(null)))}}</div>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}
